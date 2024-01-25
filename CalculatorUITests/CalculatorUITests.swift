@@ -87,7 +87,6 @@ final class CalculatorUITests: XCTestCase {
      }
     
     func testPercent() throws  {
-        call.call()
          app.launch()
          let button2 = app.staticTexts["2"].firstMatch
          button2.tap()
