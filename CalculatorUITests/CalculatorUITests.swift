@@ -86,7 +86,8 @@ final class CalculatorUITests: XCTestCase {
          XCTAssert(app.staticTexts["Введите цифры!"].exists)
      }
     
-    func testPercent() throws {
+    func testPercent() throws  {
+        call.call()
          app.launch()
          let button2 = app.staticTexts["2"].firstMatch
          button2.tap()
@@ -94,4 +95,32 @@ final class CalculatorUITests: XCTestCase {
          app.buttons["="].tap()
          XCTAssert(app.buttons["resultString"].staticTexts["0.02"].exists)
      }
-}
+
+    func testPercentSckip() throws  {
+        try XCTSkipIf(UIDevice.current.userInterfaceIdiom != .pad, "Pointer interaction tests are for iPad only")
+
+         app.launch()
+         let button2 = app.staticTexts["2"].firstMatch
+         button2.tap()
+         app.staticTexts["%"].tap()
+         app.buttons["="].tap()
+         XCTAssert(app.buttons["resultString"].staticTexts["0.02"].exists)
+     }
+    
+    func testPercentWait() throws  {
+        app.launch()
+         let button2 = app.staticTexts["2"].firstMatch
+         button2.tap()
+        
+        let element = app.staticTexts["2"]
+        let existsPredicate = NSPredicate(format: "exists == true")
+        let expectation = XCTNSPredicateExpectation(predicate: existsPredicate,
+                                                        object: element)
+        wait(for: [expectation], timeout: 3)
+        
+        XCTAssert(element.exists)
+         app.staticTexts["%"].tap()
+         app.buttons["="].tap()
+         XCTAssert(app.buttons["resultString"].staticTexts["0.2"].exists)
+     }
+ }
