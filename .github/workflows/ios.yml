@@ -1,20 +1,36 @@
 name: iOS UI-tests
 
 on:
+  push:
+    branches:
+      - main
+      - develop
   workflow_dispatch:
     inputs:
       testplan:
         required: true
-        default: 'debug'
+        default: 'Debug'
         type: choice
         options:
-          - debug
-          - regress
-          - smoke
+          - Debug
+          - Regress
+          - Smoke
+      device:
+        required: true
+        default: 'iPhone 13'
+        type: choice
+        options:
+          - 'iPhone 13'
+          - 'iPhone 14'
+          - 'iPhone 15'
+          - 'iPhone 15 Pro'
+
 
 env:
   LC_ALL: en_US.UTF-8
   LANG: en_US.UTF-8
+  TESTPLAN: ${{ inputs.testplan || 'Debug' }}
+  DEVICE: ${{ inputs.device || 'iPhone 13' }}
 
 jobs:
   build:
@@ -37,6 +53,8 @@ jobs:
           bundle install
       - name: Build app
         run: fastlane ios build_calculator
+      - name: Run UI-tests
+        run: fastlane ios test_app testplan:"${TESTPLAN}" device:"${DEVICE}"
       - name: Run tests
         run: fastlane ios test_app
       - name: Install xcresults
