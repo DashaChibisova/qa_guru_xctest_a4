@@ -20,6 +20,7 @@ on:
         default: 'iPhone 13'
         type: choice
         options:
+          - 'iPhone 8'
           - 'iPhone 13'
           - 'iPhone 14'
 
